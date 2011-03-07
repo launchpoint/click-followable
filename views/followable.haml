@@ -1,0 +1,25 @@
+-if(logged_in())
+  -if($ft->has_follower($current_user))
+    %span{:class=>'remote', :id=>"unfollow_{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}"} =se("Unfollow this " . $type)
+    %span{:class=>'remote', :id=>"follow_{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}", :style=>'display:none'} =se("Follow this " . $type)
+  -else
+    %span{:class=>'remote', :id=>"unfollow_{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}", :style=>'display:none'} =se("Unfollow this " . $type)
+    %span{:class=>'remote', :id=>"follow_{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}"} =se("Follow this " . $type)
+  :js
+    $(document).ready( function()
+    {
+      e = $('#follow_<?="{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}"?>');
+      e.click(function () {
+        $(this).toggle();
+        $('#unfollow_<?="{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}"?>').toggle();
+        $.get('<?=$ft->follow_url?>');
+      });
+      e = $('#unfollow_<?="{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}"?>');
+      e.click(function () {
+        $(this).toggle();
+        $('#follow_<?="{$ft->object_type}_{$ft->object_id}_{$ft->id}_{$unique}"?>').toggle();
+        $.get('<?=$ft->unfollow_url?>');
+      });
+    });
+-else
+  =se("You could follow this " .$type . " if you were logged in.")
